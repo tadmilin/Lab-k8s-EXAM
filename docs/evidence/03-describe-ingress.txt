@@ -1,0 +1,43 @@
+# collected 2026-11-22 10:47:21
+
+$ kubectl describe ingress -n iam624
+Name:             iam624-admin
+Labels:           <none>
+Namespace:        iam624
+Address:          192.168.253.133
+Ingress Class:    nginx
+Default backend:  <default>
+Rules:
+  Host               Path  Backends
+  ----               ----  --------
+  admin.iam-624.com  
+                     /   admin-624:80 (10.244.2.17:8080,10.244.1.20:8080,10.244.0.21:8080)
+Annotations:         <none>
+Events:
+  Type    Reason  Age                From                      Message
+  ----    ------  ----               ----                      -------
+  Normal  Sync    17m (x2 over 18m)  nginx-ingress-controller  Scheduled for sync
+
+
+Name:             iam624-www
+Labels:           <none>
+Namespace:        iam624
+Address:          192.168.253.133
+Ingress Class:    nginx
+Default backend:  <default>
+Rules:
+  Host             Path  Backends
+  ----             ----  --------
+  www.iam-624.com  
+                   /           portal-624:80 (10.244.2.22:8080,10.244.0.23:8080,10.244.1.22:8080)
+                   /research   app-research:80 (10.244.2.21:8080,10.244.0.22:8080,10.244.1.21:8080)
+                   /api-624    api-624:80 (10.244.2.18:8080,10.244.1.19:8080,10.244.0.18:8080)
+  www.id-624.com   
+                   /           portal-624:80 (10.244.2.22:8080,10.244.0.23:8080,10.244.1.22:8080)
+                   /research   app-research:80 (10.244.2.21:8080,10.244.0.22:8080,10.244.1.21:8080)
+                   /api-624    api-624:80 (10.244.2.18:8080,10.244.1.19:8080,10.244.0.18:8080)
+Annotations:       <none>
+Events:
+  Type    Reason  Age                From                      Message
+  ----    ------  ----               ----                      -------
+  Normal  Sync    17m (x2 over 18m)  nginx-ingress-controller  Scheduled for sync

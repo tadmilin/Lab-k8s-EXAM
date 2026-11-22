@@ -1,0 +1,49 @@
+# Who may touch the ConfigMap site-content (name, student ID, photo, research summary):
+#   content-reader  get         used by portal-624 and app-research
+#   content-editor  get, patch  used by admin-624
+# resourceNames limits both Roles to this one ConfigMap. api-624 gets no token at all.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: content-reader
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: content-editor
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: content-read
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    resourceNames: ["site-content"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: content-edit
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    resourceNames: ["site-content"]
+    verbs: ["get", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: content-read
+roleRef: {apiGroup: rbac.authorization.k8s.io, kind: Role, name: content-read}
+subjects:
+  - {kind: ServiceAccount, name: content-reader}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: content-edit
+roleRef: {apiGroup: rbac.authorization.k8s.io, kind: Role, name: content-edit}
+subjects:
+  - {kind: ServiceAccount, name: content-editor}

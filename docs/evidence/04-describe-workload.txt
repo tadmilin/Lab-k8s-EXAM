@@ -1,0 +1,178 @@
+# collected 2026-11-22 10:47:22
+
+$ kubectl describe svc -n iam624
+Name:                     admin-624
+Namespace:                iam624
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=admin-624
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.101.88.66
+IPs:                      10.101.88.66
+Port:                     <unset>  80/TCP
+TargetPort:               8080/TCP
+Endpoints:                10.244.2.17:8080,10.244.1.20:8080,10.244.0.21:8080
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+
+
+Name:                     api-624
+Namespace:                iam624
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=api-624
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.106.159.185
+IPs:                      10.106.159.185
+Port:                     <unset>  80/TCP
+TargetPort:               8080/TCP
+Endpoints:                10.244.2.18:8080,10.244.1.19:8080,10.244.0.18:8080
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+
+
+Name:                     app-research
+Namespace:                iam624
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=app-research
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.96.43.46
+IPs:                      10.96.43.46
+Port:                     <unset>  80/TCP
+TargetPort:               8080/TCP
+Endpoints:                10.244.2.21:8080,10.244.0.22:8080,10.244.1.21:8080
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+
+
+Name:                     portal-624
+Namespace:                iam624
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=portal-624
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.101.94.81
+IPs:                      10.101.94.81
+Port:                     <unset>  80/TCP
+TargetPort:               8080/TCP
+Endpoints:                10.244.2.22:8080,10.244.0.23:8080,10.244.1.22:8080
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+
+$ kubectl describe deploy admin-624 -n iam624
+Name:                   admin-624
+Namespace:              iam624
+CreationTimestamp:      Sun, 22 Nov 2026 10:28:47 +0700
+Labels:                 app=admin-624
+Annotations:            deployment.kubernetes.io/revision: 4
+Selector:               app=admin-624
+Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:           app=admin-624
+  Service Account:  content-editor
+  Containers:
+   app:
+    Image:      python:3.12-alpine
+    Port:       8080/TCP
+    Host Port:  0/TCP
+    Command:
+      python
+      /app/app.py
+    Limits:
+      memory:  64Mi
+    Requests:
+      cpu:      10m
+      memory:   32Mi
+    Readiness:  http-get http://:8080/healthz delay=0s timeout=1s period=10s #success=1 #failure=3
+    Environment:
+      PYTHONDONTWRITEBYTECODE:  1
+      PYTHONUNBUFFERED:         1
+      NODE_NAME:                 (v1:spec.nodeName)
+    Mounts:
+      /app from code (ro)
+  Volumes:
+   code:
+    Type:                       ConfigMap (a volume populated by a ConfigMap)
+    Name:                       admin-code-986hc29d4h
+    Optional:                   false
+  Topology Spread Constraints:  kubernetes.io/hostname:DoNotSchedule when max skew 1 is exceeded for selector app=admin-624
+  Node-Selectors:               <none>
+  Tolerations:                  <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  admin-624-7b8664d8b9 (0/0 replicas created), admin-624-7b845cb7b (0/0 replicas created), admin-624-75cffc6888 (0/0 replicas created)
+NewReplicaSet:   admin-624-5bc57df884 (3/3 replicas created)
+Events:
+  Type    Reason             Age                 From                   Message
+  ----    ------             ----                ----                   -------
+  Normal  ScalingReplicaSet  18m                 deployment-controller  Scaled up replica set admin-624-7b8664d8b9 from 0 to 3
+  Normal  ScalingReplicaSet  14m                 deployment-controller  Scaled up replica set admin-624-7b845cb7b from 0 to 1
+  Normal  ScalingReplicaSet  14m                 deployment-controller  Scaled down replica set admin-624-7b8664d8b9 from 3 to 2
+  Normal  ScalingReplicaSet  14m                 deployment-controller  Scaled up replica set admin-624-7b845cb7b from 1 to 2
+  Normal  ScalingReplicaSet  14m                 deployment-controller  Scaled down replica set admin-624-7b8664d8b9 from 2 to 1
+  Normal  ScalingReplicaSet  14m                 deployment-controller  Scaled up replica set admin-624-7b845cb7b from 2 to 3
+  Normal  ScalingReplicaSet  13m                 deployment-controller  Scaled down replica set admin-624-7b8664d8b9 from 1 to 0
+  Normal  ScalingReplicaSet  11m                 deployment-controller  Scaled up replica set admin-624-75cffc6888 from 0 to 1
+  Normal  ScalingReplicaSet  11m                 deployment-controller  Scaled down replica set admin-624-7b845cb7b from 3 to 2
+  Normal  ScalingReplicaSet  10m (x10 over 11m)  deployment-controller  (combined from similar events): Scaled down replica set admin-624-75cffc6888 from 1 to 0
+
+$ kubectl describe configmap site-content -n iam624
+Name:         site-content
+Namespace:    iam624
+Labels:       <none>
+Annotations:  <none>
+
+Data
+====
+name-en:
+----
+Pathomtad Phoovanakulchai
+
+name-th:
+----
+ปฐมทัศน์ ภูวนกุลชัย
+
+research.txt:
+----
+การพัฒนาระบบคิวเพื่อจัดการการใช้ Unity Editor ร่วมกันของ AI หลายเอเจนต์
+
+งานวิจัยนี้ศึกษาปัญหาที่เกิดขึ้นเมื่อเอเจนต์ปัญญาประดิษฐ์หลายตัวต้องใช้ Unity Editor เครื่องเดียวกัน แม้แต่ละเอเจนต์จะรับผิดชอบตัวละครคนละตัว แต่ทุกคำสั่งเปลี่ยนสถานะส่วนกลางเดียวกัน เช่น ฉากที่เปิดอยู่ โหมด Play และการ compile สคริปต์ นอกจากนี้ หากคำตอบจากเครื่องมือสูญหาย เอเจนต์จะไม่ทราบว่าคำสั่งเดิมสำเร็จแล้วหรือยัง และอาจสั่งซ้ำโดยไม่จำเป็น
+
+ผู้วิจัยจึงพัฒนาส่วนขยายบน MCP for Unity โดยต่อยอดจากเครื่องมือเดิม ไม่ได้สร้างโปรโตคอล MCP ขึ้นใหม่ ระบบมีสามส่วนหลัก ส่วนแรกคือคิวงานถาวรที่เก็บไว้ในฐานข้อมูล SQLite เพื่อให้เอเจนต์สอบถามผลด้วย submission key เดิมได้ ส่วนที่สองคือสิทธิ์ครอบครอง Editor ที่มีอายุจำกัด เรียกว่า lease เพื่อให้ขั้นตอนที่เปลี่ยนสถานะทำงานทีละงาน ส่วนที่สามคือ receipt หรือหลักฐานผลการดำเนินงาน ซึ่งแยกการสั่งคำสั่งออกจากการยืนยันว่าได้รับผลแล้ว เมื่อผลตอบกลับไม่แน่นอน ระบบจะอ่าน receipt เดิมก่อนและไม่สั่งคำสั่งที่เปลี่ยนสถานะซ้ำ หากหลักฐานไม่ตรงกัน ระบบจะหยุดและแยกงานไว้ในสถานะ quarantine ให้ผู้ดูแลตรวจสอบ
+
+การประเมินเบื้องต้นมีสองส่วน คือการทดลองนำร่องที่เปรียบเทียบระบบเดิมกับระบบคิวหนึ่งคู่ ฝั่งละสามเอเจนต์ และการทดสอบกลไกกู้คืนในโครงการ Unity ขนาดเล็ก
+
+ผลการทดลองพบว่าบันทึกของคิวมีงานสิ้นสุด 51 งาน สำเร็จตามสถานะ 45 งาน และล้มเหลว 6 งาน แต่เมื่อตรวจผลระดับงานจริงมีเพียง 44 งานที่ผ่าน จึงเห็นว่าการนับเฉพาะสถานะอาจทำให้ผลสำเร็จดูสูงเกินจริง ช่วงตั้งแต่งานถูกรับไปทำจนเสร็จของทั้ง 51 งานไม่ซ้อนกันเลย เอเจนต์เรียก MCP ฝั่งระบบเดิม 340 ครั้ง และฝั่งคิว 66 ครั้ง แต่หนึ่งคำสั่งของคิวครอบคลุมขั้นตอนมากกว่า จึงไม่ถือว่างานภายในลดลงในสัดส่วนเดียวกัน ส่วนการกู้คืน พบการยืนยันรับผลที่สูญหายหนึ่งกรณี และกู้คืนได้ใน 10.37 วินาที โดยไม่เริ่ม Play ซ้ำ ส่วนการยืนยัน import ซ้ำแปดเหตุการณ์ใช้เวลามัธยฐาน 2.65 วินาที
+
+ข้อจำกัดสำคัญคือการทดลองนี้เป็นการศึกษานำร่องเพียงหนึ่งคู่ และตัวละครทุกตัวยังทำได้เพียงบางส่วนทั้งสองฝั่ง จึงสรุปไม่ได้ว่าระบบคิวเร็วกว่า ประหยัดกว่า หรือให้คุณภาพดีกว่า หลักฐานสนับสนุนเพียงว่าการจัดลำดับงานและตรวจคืนผลทำได้จริงในขอบเขตที่ทดสอบ งานต่อไปคือการเปรียบเทียบรอบใหม่ที่วัดเวลา การรบกวนสถานะ Editor และจำนวน token อย่างครบถ้วน
+
+
+student-id:
+----
+68130624
+
+
+BinaryData
+====
+photo.jpg: 85160 bytes
+
+Events:  <none>

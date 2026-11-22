@@ -1,0 +1,33 @@
+# collected 2026-11-22 10:47:41
+
+$ kubectl logs deploy/portal-624 -n iam624 --tail=5
+10.244.0.5 - - [22/Nov/2026 03:47:39] "GET / HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:40] "GET / HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:40] "GET / HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:40] "GET / HTTP/1.1" 200 -
+10.244.2.1 - - [22/Nov/2026 03:47:42] "GET /healthz HTTP/1.1" 200 -
+Found 3 pods, using pod/portal-624-7b64b87d9c-sgq94
+
+$ kubectl logs deploy/app-research -n iam624 --tail=5
+10.244.0.5 - - [22/Nov/2026 03:47:40] "GET /research HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:40] "GET /research HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET /research HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET /research HTTP/1.1" 200 -
+10.244.1.1 - - [22/Nov/2026 03:47:42] "GET /healthz HTTP/1.1" 200 -
+Found 3 pods, using pod/app-research-789f9868dd-9ncvp
+
+$ kubectl logs deploy/api-624 -n iam624 --tail=5
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET /api-624/x HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET /api-624/x HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET /api-624/x HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET /api-624/x HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET /api-624/x HTTP/1.1" 200 -
+Found 3 pods, using pod/api-624-5bff9ccc47-nnpkl
+
+$ kubectl logs deploy/admin-624 -n iam624 --tail=5
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET / HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET / HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET / HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET / HTTP/1.1" 200 -
+10.244.0.5 - - [22/Nov/2026 03:47:41] "GET / HTTP/1.1" 200 -
+Found 3 pods, using pod/admin-624-5bc57df884-zhqfz

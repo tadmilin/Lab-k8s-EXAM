@@ -1,0 +1,55 @@
+# collected 2026-11-22 10:47:35
+
+$ kubectl describe role,rolebinding -n iam624
+Name:         content-edit
+Labels:       <none>
+Annotations:  <none>
+PolicyRule:
+  Resources   Non-Resource URLs  Resource Names  Verbs
+  ---------   -----------------  --------------  -----
+  configmaps  []                 [site-content]  [get patch]
+
+
+Name:         content-read
+Labels:       <none>
+Annotations:  <none>
+PolicyRule:
+  Resources   Non-Resource URLs  Resource Names  Verbs
+  ---------   -----------------  --------------  -----
+  configmaps  []                 [site-content]  [get]
+
+
+Name:         content-edit
+Labels:       <none>
+Annotations:  <none>
+Role:
+  Kind:  Role
+  Name:  content-edit
+Subjects:
+  Kind            Name            Namespace
+  ----            ----            ---------
+  ServiceAccount  content-editor  iam624
+
+
+Name:         content-read
+Labels:       <none>
+Annotations:  <none>
+Role:
+  Kind:  Role
+  Name:  content-read
+Subjects:
+  Kind            Name            Namespace
+  ----            ----            ---------
+  ServiceAccount  content-reader  iam624
+
+$ kubectl auth can-i get configmap/site-content -n iam624 --as=system:serviceaccount:iam624:content-reader
+yes
+
+$ kubectl auth can-i patch configmap/site-content -n iam624 --as=system:serviceaccount:iam624:content-reader
+no
+
+$ kubectl auth can-i patch configmap/site-content -n iam624 --as=system:serviceaccount:iam624:content-editor
+yes
+
+$ kubectl auth can-i delete configmap/site-content -n iam624 --as=system:serviceaccount:iam624:content-editor
+no

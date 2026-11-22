@@ -1,0 +1,52 @@
+# Host-based and path-based routing through the ingress-nginx controller.
+#   www.iam-624.com   /           -> portal-624    photo and name
+#                     /research   -> app-research  research summary
+#                     /api-624    -> api-624       /api-624/<text> shows <text> big
+#   www.id-624.com    same three paths (the assignment says the site is reached at www.id-624.com)
+#   admin.iam-624.com /           -> admin-624     buttons to edit the portal and research data
+# The longest matching Prefix wins, so "/" only gets what the other two paths do not match.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: iam624-www
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: www.iam-624.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: {service: {name: portal-624, port: {number: 80}}}
+          - path: /research
+            pathType: Prefix
+            backend: {service: {name: app-research, port: {number: 80}}}
+          - path: /api-624
+            pathType: Prefix
+            backend: {service: {name: api-624, port: {number: 80}}}
+    - host: www.id-624.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: {service: {name: portal-624, port: {number: 80}}}
+          - path: /research
+            pathType: Prefix
+            backend: {service: {name: app-research, port: {number: 80}}}
+          - path: /api-624
+            pathType: Prefix
+            backend: {service: {name: api-624, port: {number: 80}}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: iam624-admin
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: admin.iam-624.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: {service: {name: admin-624, port: {number: 80}}}

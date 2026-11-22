@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 664" width="1000" height="664" font-family="Segoe UI, Leelawadee UI, Tahoma, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+    <style>
+      .box{fill:#fff;stroke:#5a6b7d;stroke-width:1.4}
+      .t{font-weight:700} .s{font-size:11.5px;fill:#333} .m{font-family:Consolas,monospace;font-size:11.5px}
+      .ln{stroke:#333;stroke-width:1.6;fill:none;marker-end:url(#a)}
+      .portal{fill:#dbeafe;stroke:#2563eb} .research{fill:#dcfce7;stroke:#16a34a}
+      .api{fill:#fef3c7;stroke:#d97706} .admin{fill:#fce7f3;stroke:#db2777}
+    </style>
+  </defs>
+  <rect width="1000" height="664" fill="#fff"/>
+
+  <!-- client side -->
+  <rect class="box" x="16" y="56" width="214" height="118" rx="10"/>
+  <text x="123" y="80" text-anchor="middle" class="t">Browser / curl</text>
+  <text x="30" y="104" class="m">http://www.iam-624.com</text>
+  <text x="30" y="124" class="m">http://www.id-624.com</text>
+  <text x="30" y="144" class="m">http://admin.iam-624.com</text>
+  <text x="30" y="164" class="s">(Windows host or Linux)</text>
+
+  <rect class="box" x="16" y="200" width="214" height="92" rx="10" style="fill:#f8fafc"/>
+  <text x="123" y="222" text-anchor="middle" class="t">/etc/hosts</text>
+  <text x="26" y="244" class="m">&lt;minikube ip&gt;</text>
+  <text x="26" y="262" class="m">  www.iam-624.com admin.iam-624.com</text>
+  <text x="26" y="280" class="m">  www.id-624.com</text>
+  <path class="ln" d="M123,200 L123,178"/>
+
+  <!-- cluster -->
+  <rect x="250" y="14" width="736" height="636" rx="14" fill="#f4f7fb" stroke="#2b6cb0" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="266" y="36" class="t" fill="#2b6cb0">minikube cluster "exam624" · 3 nodes · Kubernetes v1.35.1 · namespace iam624</text>
+
+  <rect class="box" x="272" y="50" width="694" height="96" rx="10"/>
+  <text x="619" y="72" text-anchor="middle" class="t">Ingress  (ingress-nginx controller, port 80 on node exam624)</text>
+  <text x="288" y="96" class="m">host www.iam-624.com, www.id-624.com:  /  → portal-624    /research → app-research    /api-624 → api-624</text>
+  <text x="288" y="118" class="m">host admin.iam-624.com:                 /  → admin-624</text>
+  <text x="288" y="138" class="s">Ingress iam624-www and iam624-admin · longest matching Prefix wins</text>
+  <path class="ln" d="M230,115 L270,100"/>
+
+  <!-- services -->
+  <g>
+    <rect class="portal" x="284" y="172" width="156" height="46" rx="8" stroke-width="1.4"/>
+    <text x="362" y="192" text-anchor="middle" class="t">Service</text><text x="362" y="209" text-anchor="middle">portal-624</text>
+    <rect class="research" x="456" y="172" width="156" height="46" rx="8" stroke-width="1.4"/>
+    <text x="534" y="192" text-anchor="middle" class="t">Service</text><text x="534" y="209" text-anchor="middle">app-research</text>
+    <rect class="api" x="628" y="172" width="156" height="46" rx="8" stroke-width="1.4"/>
+    <text x="706" y="192" text-anchor="middle" class="t">Service</text><text x="706" y="209" text-anchor="middle">api-624</text>
+    <rect class="admin" x="800" y="172" width="156" height="46" rx="8" stroke-width="1.4"/>
+    <text x="878" y="192" text-anchor="middle" class="t">Service</text><text x="878" y="209" text-anchor="middle">admin-624</text>
+  </g>
+  <path class="ln" d="M362,146 L362,170"/><path class="ln" d="M534,146 L534,170"/>
+  <path class="ln" d="M706,146 L706,170"/><path class="ln" d="M878,146 L878,170"/>
+  <text x="619" y="238" text-anchor="middle" class="s">each Service → 3 Pods (Deployment replicas: 3, topologySpreadConstraints: one Pod per node)</text>
+  <path class="ln" d="M619,244 L619,258"/>
+
+  <!-- nodes -->
+  <g id="n1">
+    <rect class="box" x="272" y="262" width="222" height="210" rx="10"/>
+    <text x="383" y="284" text-anchor="middle" class="t">node exam624</text>
+    <text x="383" y="300" text-anchor="middle" class="s">control-plane + ingress controller</text>
+  </g>
+  <rect class="box" x="508" y="262" width="222" height="210" rx="10"/>
+  <text x="619" y="284" text-anchor="middle" class="t">node exam624-m02</text>
+  <text x="619" y="300" text-anchor="middle" class="s">worker</text>
+  <rect class="box" x="744" y="262" width="222" height="210" rx="10"/>
+  <text x="855" y="284" text-anchor="middle" class="t">node exam624-m03</text>
+  <text x="855" y="300" text-anchor="middle" class="s">worker</text>
+  <g font-size="12">
+    <rect class="portal" x="290" y="312" width="186" height="30" rx="15"/><text x="383" y="332" text-anchor="middle">Pod portal-624</text>
+    <rect class="research" x="290" y="348" width="186" height="30" rx="15"/><text x="383" y="368" text-anchor="middle">Pod app-research</text>
+    <rect class="api" x="290" y="384" width="186" height="30" rx="15"/><text x="383" y="404" text-anchor="middle">Pod api-624</text>
+    <rect class="admin" x="290" y="420" width="186" height="30" rx="15"/><text x="383" y="440" text-anchor="middle">Pod admin-624</text>
+    <rect class="portal" x="526" y="312" width="186" height="30" rx="15"/><text x="619" y="332" text-anchor="middle">Pod portal-624</text>
+    <rect class="research" x="526" y="348" width="186" height="30" rx="15"/><text x="619" y="368" text-anchor="middle">Pod app-research</text>
+    <rect class="api" x="526" y="384" width="186" height="30" rx="15"/><text x="619" y="404" text-anchor="middle">Pod api-624</text>
+    <rect class="admin" x="526" y="420" width="186" height="30" rx="15"/><text x="619" y="440" text-anchor="middle">Pod admin-624</text>
+    <rect class="portal" x="762" y="312" width="186" height="30" rx="15"/><text x="855" y="332" text-anchor="middle">Pod portal-624</text>
+    <rect class="research" x="762" y="348" width="186" height="30" rx="15"/><text x="855" y="368" text-anchor="middle">Pod app-research</text>
+    <rect class="api" x="762" y="384" width="186" height="30" rx="15"/><text x="855" y="404" text-anchor="middle">Pod api-624</text>
+    <rect class="admin" x="762" y="420" width="186" height="30" rx="15"/><text x="855" y="440" text-anchor="middle">Pod admin-624</text>
+  </g>
+  <text x="619" y="490" text-anchor="middle" class="s">every Pod: python:3.12-alpine + code from a ConfigMap made by kustomize · non-root · read-only root filesystem</text>
+
+  <!-- data -->
+  <rect class="box" x="272" y="536" width="420" height="98" rx="10" style="fill:#fffbea"/>
+  <text x="482" y="558" text-anchor="middle" class="t">kube-apiserver → ConfigMap site-content</text>
+  <text x="288" y="580" class="m">data: name-th, name-en, student-id, research.txt</text>
+  <text x="288" y="598" class="m">binaryData: photo.jpg</text>
+  <text x="288" y="620" class="s">created once from content/ by deploy.sh; edits survive Pod restarts</text>
+
+  <rect class="box" x="708" y="536" width="258" height="98" rx="10"/>
+  <text x="837" y="558" text-anchor="middle" class="t">RBAC (Role + ServiceAccount)</text>
+  <text x="720" y="580" class="s">content-reader: get → portal-624, app-research</text>
+  <text x="720" y="600" class="s">content-editor: get, patch → admin-624</text>
+  <text x="720" y="620" class="s">api-624: no API token</text>
+  <path class="ln" d="M482,498 L482,534"/>
+  <text x="490" y="522" class="s">GET (read) / PATCH (admin save) over HTTPS</text>
+</svg>

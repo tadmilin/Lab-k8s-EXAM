@@ -1,0 +1,4 @@
+# Append this line to the hosts file of the machine that runs the browser:
+#   Linux/macOS: /etc/hosts        Windows (administrator): C:\Windows\System32\drivers\etc\hosts
+# Replace the IP with the output of:  minikube ip -p exam624
+192.168.253.133  www.iam-624.com  admin.iam-624.com  www.id-624.com

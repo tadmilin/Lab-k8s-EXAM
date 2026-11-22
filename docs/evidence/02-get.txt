@@ -1,0 +1,78 @@
+# collected 2026-11-22 10:47:21
+
+$ kubectl get deploy,rs,svc,ingress -n iam624 -o wide
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES               SELECTOR
+deployment.apps/admin-624      3/3     3            3           18m   app          python:3.12-alpine   app=admin-624
+deployment.apps/api-624        3/3     3            3           18m   app          python:3.12-alpine   app=api-624
+deployment.apps/app-research   3/3     3            3           18m   app          python:3.12-alpine   app=app-research
+deployment.apps/portal-624     3/3     3            3           18m   app          python:3.12-alpine   app=portal-624
+
+NAME                                      DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES               SELECTOR
+replicaset.apps/admin-624-5bc57df884      3         3         3       10m   app          python:3.12-alpine   app=admin-624,pod-template-hash=5bc57df884
+replicaset.apps/admin-624-75cffc6888      0         0         0       11m   app          python:3.12-alpine   app=admin-624,pod-template-hash=75cffc6888
+replicaset.apps/admin-624-7b845cb7b       0         0         0       14m   app          python:3.12-alpine   app=admin-624,pod-template-hash=7b845cb7b
+replicaset.apps/admin-624-7b8664d8b9      0         0         0       18m   app          python:3.12-alpine   app=admin-624,pod-template-hash=7b8664d8b9
+replicaset.apps/api-624-5bff9ccc47        3         3         3       10m   app          python:3.12-alpine   app=api-624,pod-template-hash=5bff9ccc47
+replicaset.apps/api-624-7d65798664        0         0         0       18m   app          python:3.12-alpine   app=api-624,pod-template-hash=7d65798664
+replicaset.apps/api-624-fdf94c67b         0         0         0       11m   app          python:3.12-alpine   app=api-624,pod-template-hash=fdf94c67b
+replicaset.apps/app-research-5b8c48b4cc   0         0         0       18m   app          python:3.12-alpine   app=app-research,pod-template-hash=5b8c48b4cc
+replicaset.apps/app-research-6f586c495c   0         0         0       11m   app          python:3.12-alpine   app=app-research,pod-template-hash=6f586c495c
+replicaset.apps/app-research-789f9868dd   3         3         3       10m   app          python:3.12-alpine   app=app-research,pod-template-hash=789f9868dd
+replicaset.apps/portal-624-648f788dc4     0         0         0       11m   app          python:3.12-alpine   app=portal-624,pod-template-hash=648f788dc4
+replicaset.apps/portal-624-7b569dfccd     0         0         0       14m   app          python:3.12-alpine   app=portal-624,pod-template-hash=7b569dfccd
+replicaset.apps/portal-624-7b64b87d9c     3         3         3       10m   app          python:3.12-alpine   app=portal-624,pod-template-hash=7b64b87d9c
+replicaset.apps/portal-624-85546894bf     0         0         0       18m   app          python:3.12-alpine   app=portal-624,pod-template-hash=85546894bf
+
+NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+service/admin-624      ClusterIP   10.101.88.66     <none>        80/TCP    18m   app=admin-624
+service/api-624        ClusterIP   10.106.159.185   <none>        80/TCP    18m   app=api-624
+service/app-research   ClusterIP   10.96.43.46      <none>        80/TCP    18m   app=app-research
+service/portal-624     ClusterIP   10.101.94.81     <none>        80/TCP    18m   app=portal-624
+
+NAME                                     CLASS   HOSTS                            ADDRESS           PORTS   AGE
+ingress.networking.k8s.io/iam624-admin   nginx   admin.iam-624.com                192.168.253.133   80      18m
+ingress.networking.k8s.io/iam624-www     nginx   www.iam-624.com,www.id-624.com   192.168.253.133   80      18m
+
+$ kubectl get pods -n iam624 -o wide --sort-by=.spec.nodeName
+NAME                            READY   STATUS    RESTARTS   AGE     IP            NODE          NOMINATED NODE   READINESS GATES
+admin-624-5bc57df884-5pcrf      1/1     Running   0          10m     10.244.0.21   exam624       <none>           <none>
+api-624-5bff9ccc47-8wxf8        1/1     Running   0          10m     10.244.0.18   exam624       <none>           <none>
+app-research-789f9868dd-j9lmm   1/1     Running   0          8m12s   10.244.0.22   exam624       <none>           <none>
+portal-624-7b64b87d9c-l6nc4     1/1     Running   0          8m12s   10.244.0.23   exam624       <none>           <none>
+admin-624-5bc57df884-t45m6      1/1     Running   0          10m     10.244.1.20   exam624-m02   <none>           <none>
+api-624-5bff9ccc47-g88b8        1/1     Running   0          10m     10.244.1.19   exam624-m02   <none>           <none>
+app-research-789f9868dd-9ncvp   1/1     Running   0          8m12s   10.244.1.21   exam624-m02   <none>           <none>
+portal-624-7b64b87d9c-627z4     1/1     Running   0          8m11s   10.244.1.22   exam624-m02   <none>           <none>
+admin-624-5bc57df884-zhqfz      1/1     Running   0          10m     10.244.2.17   exam624-m03   <none>           <none>
+api-624-5bff9ccc47-nnpkl        1/1     Running   0          10m     10.244.2.18   exam624-m03   <none>           <none>
+app-research-789f9868dd-rb7dv   1/1     Running   0          8m12s   10.244.2.21   exam624-m03   <none>           <none>
+portal-624-7b64b87d9c-sgq94     1/1     Running   0          8m11s   10.244.2.22   exam624-m03   <none>           <none>
+
+$ kubectl get configmap,serviceaccount,role,rolebinding -n iam624
+NAME                                 DATA   AGE
+configmap/admin-code-986hc29d4h      2      10m
+configmap/api-code-9m6h67bf59        2      10m
+configmap/kube-root-ca.crt           1      18m
+configmap/portal-code-9hdgk6246d     2      10m
+configmap/research-code-44hb227ht4   2      10m
+configmap/site-content               5      18m
+
+NAME                            AGE
+serviceaccount/content-editor   18m
+serviceaccount/content-reader   18m
+serviceaccount/default          18m
+
+NAME                                          CREATED AT
+role.rbac.authorization.k8s.io/content-edit   2026-11-22T03:28:47Z
+role.rbac.authorization.k8s.io/content-read   2026-11-22T03:28:47Z
+
+NAME                                                 ROLE                AGE
+rolebinding.rbac.authorization.k8s.io/content-edit   Role/content-edit   18m
+rolebinding.rbac.authorization.k8s.io/content-read   Role/content-read   18m
+
+$ kubectl get endpointslices -n iam624
+NAME                 ADDRESSTYPE   PORTS   ENDPOINTS                             AGE
+admin-624-fh6ml      IPv4          8080    10.244.2.17,10.244.1.20,10.244.0.21   18m
+api-624-6dl6g        IPv4          8080    10.244.2.18,10.244.1.19,10.244.0.18   18m
+app-research-s7rd5   IPv4          8080    10.244.2.21,10.244.0.22,10.244.1.21   18m
+portal-624-k458b     IPv4          8080    10.244.2.22,10.244.0.23,10.244.1.22   18m

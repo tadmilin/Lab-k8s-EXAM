@@ -1,0 +1,25 @@
+# kubectl apply -k .  creates everything in namespace iam624 except the ConfigMap site-content.
+# configMapGenerator turns the app source files into ConfigMaps; the Pods run them on python:3.12-alpine,
+# so no image build is needed. Editing a file and applying again rolls the Pods automatically.
+# site-content (the data admin-624 edits) is created once by deploy.sh / deploy.cmd from content/,
+# so that a later apply does not overwrite what was edited on admin.iam-624.com.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: iam624
+resources:
+  - k8s/namespace.yaml
+  - k8s/rbac.yaml
+  - k8s/portal-624.yaml
+  - k8s/app-research.yaml
+  - k8s/api-624.yaml
+  - k8s/admin-624.yaml
+  - k8s/ingress.yaml
+configMapGenerator:
+  - name: portal-code
+    files: [apps/portal/app.py, apps/common.py]
+  - name: research-code
+    files: [apps/research/app.py, apps/common.py]
+  - name: api-code
+    files: [apps/api/app.py, apps/common.py]
+  - name: admin-code
+    files: [apps/admin/app.py, apps/common.py]

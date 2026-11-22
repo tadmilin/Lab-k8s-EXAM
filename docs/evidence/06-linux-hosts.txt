@@ -1,0 +1,19 @@
+# collected 2026-11-22 10:47:22
+
+$ minikube -p exam624 ssh -n exam624-m02 -- grep -q iam-624 /etc/hosts || echo '192.168.253.133  www.iam-624.com  admin.iam-624.com  www.id-624.com' | sudo tee -a /etc/hosts
+
+$ minikube -p exam624 ssh -n exam624-m02 -- cat /etc/hosts
+127.0.0.1	localhost
+127.0.1.1 exam624-m02
+192.168.253.1	host.minikube.internal
+192.168.253.133	control-plane.minikube.internal
+192.168.253.133  www.iam-624.com  admin.iam-624.com  www.id-624.com
+
+$ minikube -p exam624 ssh -n exam624-m02 -- curl -s http://www.iam-624.com/ | grep -o 'pod portal-624[^<]*'
+pod portal-624-7b64b87d9c-627z4 · node exam624-m02
+
+$ minikube -p exam624 ssh -n exam624-m02 -- curl -s http://www.id-624.com/research | grep -o 'pod app-research[^<]*'
+pod app-research-789f9868dd-9ncvp · node exam624-m02
+
+$ minikube -p exam624 ssh -n exam624-m02 -- curl -s http://admin.iam-624.com/ | grep -o 'pod admin-624[^<]*'
+pod admin-624-5bc57df884-5pcrf · node exam624

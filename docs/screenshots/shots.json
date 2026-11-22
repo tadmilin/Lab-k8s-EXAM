@@ -1,0 +1,214 @@
+{
+  "term-nodes": {
+    "file": "term-nodes.png",
+    "kind": "terminal",
+    "label": "minikube profile exam624: 3 nodes",
+    "cmds": [
+      "minikube -p exam624 status",
+      "kubectl get nodes -o wide"
+    ],
+    "time": "2026-11-22 10:37:42"
+  },
+  "term-get": {
+    "file": "term-get.png",
+    "kind": "terminal",
+    "label": "kubectl get: Deployment, Service, Ingress, ConfigMap and Pods spread over the nodes",
+    "cmds": [
+      "kubectl get deploy,svc,ingress,configmap -n iam624",
+      "kubectl get pods -n iam624 -o wide --sort-by=.spec.nodeName"
+    ],
+    "time": "2026-11-22 10:37:55"
+  },
+  "term-describe-ingress": {
+    "file": "term-describe-ingress.png",
+    "kind": "terminal",
+    "label": "kubectl describe ingress",
+    "cmds": [
+      "kubectl describe ingress -n iam624"
+    ],
+    "time": "2026-11-22 10:37:58"
+  },
+  "term-describe-svc": {
+    "file": "term-describe-svc.png",
+    "kind": "terminal",
+    "label": "kubectl describe svc portal-624 and endpoints",
+    "cmds": [
+      "kubectl describe svc portal-624 -n iam624",
+      "kubectl get endpointslices -n iam624"
+    ],
+    "time": "2026-11-22 10:38:02"
+  },
+  "term-describe-deploy": {
+    "file": "term-describe-deploy.png",
+    "kind": "terminal",
+    "label": "kubectl describe deployment admin-624 (events left out to fit the window)",
+    "cmds": [
+      "kubectl describe deploy admin-624 -n iam624 --show-events=false"
+    ],
+    "time": "2026-11-22 10:45:31"
+  },
+  "term-rbac": {
+    "file": "term-rbac.png",
+    "kind": "terminal",
+    "label": "RBAC: ServiceAccount, Role, RoleBinding, kubectl auth can-i",
+    "cmds": [
+      "kubectl get serviceaccount,role,rolebinding -n iam624",
+      "foreach ($t in 'get content-reader','patch content-reader','patch content-editor','delete content-editor') { $v,$s = $t -split ' '; '{0,-7} {1,-15} -> {2}' -f $v,$s,(kubectl auth can-i $v configmap/site-content -n iam624 --as=system:serviceaccount:iam624:$s) }"
+    ],
+    "time": "2026-11-22 10:38:08"
+  },
+  "term-curl": {
+    "file": "term-curl.png",
+    "kind": "terminal",
+    "label": "curl tests with the host names mapped to the minikube IP",
+    "cmds": [
+      "$ip = minikube -p exam624 ip; $h = \"--resolve\",\"www.iam-624.com:80:$ip\",\"--resolve\",\"admin.iam-624.com:80:$ip\",\"--resolve\",\"www.id-624.com:80:$ip\"",
+      "foreach ($u in 'http://www.iam-624.com/','http://www.iam-624.com/photo.jpg','http://www.iam-624.com/research','http://www.iam-624.com/api-624/hello','http://www.iam-624.com/api-624/%E0%B8%AA%E0%B8%A7%E0%B8%B1%E0%B8%AA%E0%B8%94%E0%B8%B5','http://www.iam-624.com/api-624','http://www.id-624.com/','http://www.id-624.com/research','http://www.id-624.com/api-624/hello','http://admin.iam-624.com/','http://admin.iam-624.com/portal','http://admin.iam-624.com/research') { curl.exe -s -o NUL -w \"%{http_code}  %{content_type}  %{size_download}B  $u`n\" @h $u }"
+    ],
+    "time": "2026-11-22 10:45:35"
+  },
+  "term-curl-security": {
+    "file": "term-curl-security.png",
+    "kind": "terminal",
+    "label": "HEAD request, security headers, HTML escaping, no POST on the public host",
+    "cmds": [
+      "$ip = minikube -p exam624 ip; $h = \"--resolve\",\"www.iam-624.com:80:$ip\",\"--resolve\",\"admin.iam-624.com:80:$ip\",\"--resolve\",\"www.id-624.com:80:$ip\"",
+      "curl.exe -sI @h http://www.iam-624.com/",
+      "curl.exe -s @h http://www.iam-624.com/api-624/%3Cb%3Ehi%3C%2Fb%3E | sls '<main[^>]*>.*?</main>' | % { $_.Matches.Value }",
+      "curl.exe -s -o NUL -w '%{http_code}\\n' @h -X POST -d x http://www.iam-624.com/research"
+    ],
+    "time": "2026-11-22 10:45:40"
+  },
+  "term-linux-hosts": {
+    "file": "term-linux-hosts.png",
+    "kind": "terminal",
+    "label": "Linux /etc/hosts on worker node exam624-m02, then plain curl by name (no --resolve)",
+    "cmds": [
+      "minikube -p exam624 ssh -n exam624-m02 -- \"head -2 /etc/os-release\"",
+      "minikube -p exam624 ssh -n exam624-m02 -- \"grep -q iam-624 /etc/hosts || echo '192.168.253.133  www.iam-624.com  admin.iam-624.com  www.id-624.com' | sudo tee -a /etc/hosts\"",
+      "minikube -p exam624 ssh -n exam624-m02 -- \"cat /etc/hosts\"",
+      "minikube -p exam624 ssh -n exam624-m02 -- \"curl -s http://www.iam-624.com/ | grep -o 'pod portal-624[^<]*'\"",
+      "minikube -p exam624 ssh -n exam624-m02 -- \"curl -s http://www.id-624.com/research | grep -o 'pod app-research[^<]*'\"",
+      "minikube -p exam624 ssh -n exam624-m02 -- \"curl -s http://admin.iam-624.com/ | grep -o 'pod admin-624[^<]*'\""
+    ],
+    "time": "2026-11-22 10:38:21"
+  },
+  "term-lb": {
+    "file": "term-lb.png",
+    "kind": "terminal",
+    "label": "Load balancing: replies per Pod and node (12 requests each)",
+    "cmds": [
+      "$ip = minikube -p exam624 ip; $h = \"--resolve\",\"www.iam-624.com:80:$ip\",\"--resolve\",\"admin.iam-624.com:80:$ip\",\"--resolve\",\"www.id-624.com:80:$ip\"",
+      "1..12 | % { curl.exe -s @h http://www.iam-624.com/ } | sls 'pod ([a-z0-9-]+) · node ([a-z0-9-]+)' | % { $_.Matches[0].Groups[1].Value + '  @ ' + $_.Matches[0].Groups[2].Value } | group -NoElement | ft Count,Name -AutoSize",
+      "1..12 | % { curl.exe -s @h http://www.iam-624.com/research } | sls 'pod ([a-z0-9-]+) · node ([a-z0-9-]+)' | % { $_.Matches[0].Groups[1].Value + '  @ ' + $_.Matches[0].Groups[2].Value } | group -NoElement | ft Count,Name -AutoSize",
+      "1..12 | % { curl.exe -s @h http://www.iam-624.com/api-624/x } | sls 'pod ([a-z0-9-]+) · node ([a-z0-9-]+)' | % { $_.Matches[0].Groups[1].Value + '  @ ' + $_.Matches[0].Groups[2].Value } | group -NoElement | ft Count,Name -AutoSize",
+      "1..12 | % { curl.exe -s @h http://admin.iam-624.com/ } | sls 'pod ([a-z0-9-]+) · node ([a-z0-9-]+)' | % { $_.Matches[0].Groups[1].Value + '  @ ' + $_.Matches[0].Groups[2].Value } | group -NoElement | ft Count,Name -AutoSize"
+    ],
+    "time": "2026-11-22 10:38:38"
+  },
+  "chrome-portal": {
+    "file": "chrome-portal.png",
+    "kind": "chrome",
+    "label": "www.iam-624.com : portal-624 shows the photo and name",
+    "url": "http://www.iam-624.com/",
+    "time": "2026-11-22 10:38:48"
+  },
+  "chrome-id624": {
+    "file": "chrome-id624.png",
+    "kind": "chrome",
+    "label": "www.id-624.com : the same site through the www.id-624.com name",
+    "url": "http://www.id-624.com/",
+    "time": "2026-11-22 10:38:50"
+  },
+  "chrome-research": {
+    "file": "chrome-research.png",
+    "kind": "chrome",
+    "label": "www.iam-624.com/research : app-research shows the summary",
+    "url": "http://www.iam-624.com/research",
+    "time": "2026-11-22 10:38:52"
+  },
+  "chrome-api-1": {
+    "file": "chrome-api-1.png",
+    "kind": "chrome",
+    "label": "www.iam-624.com/api-624/สวัสดี K8s : api-624 shows the text big and centred",
+    "url": "http://www.iam-624.com/api-624/%E0%B8%AA%E0%B8%A7%E0%B8%B1%E0%B8%AA%E0%B8%94%E0%B8%B5%20K8s",
+    "time": "2026-11-22 10:38:53"
+  },
+  "chrome-api-2": {
+    "file": "chrome-api-2.png",
+    "kind": "chrome",
+    "label": "www.iam-624.com/api-624/<b>hi</b> : HTML is escaped",
+    "url": "http://www.iam-624.com/api-624/%3Cb%3Ehi%3C/b%3E",
+    "time": "2026-11-22 10:38:55"
+  },
+  "chrome-admin-menu": {
+    "file": "chrome-admin-menu.png",
+    "kind": "chrome",
+    "label": "admin.iam-624.com : admin-624 menu with two buttons",
+    "url": "http://admin.iam-624.com/",
+    "time": "2026-11-22 10:38:56"
+  },
+  "chrome-admin-portal-1": {
+    "file": "chrome-admin-portal-1.png",
+    "kind": "chrome",
+    "label": "edit portal: name changed, new photo chosen (not saved yet)",
+    "url": "http://admin.iam-624.com/portal",
+    "time": "2026-11-22 10:38:58"
+  },
+  "chrome-admin-portal-2": {
+    "file": "chrome-admin-portal-2.png",
+    "kind": "chrome",
+    "label": "after Save: 'บันทึกแล้ว' and the new photo",
+    "url": "http://admin.iam-624.com/portal?saved=1",
+    "time": "2026-11-22 10:39:00"
+  },
+  "chrome-portal-edited": {
+    "file": "chrome-portal-edited.png",
+    "kind": "chrome",
+    "label": "www.iam-624.com : new name and photo at once",
+    "url": "http://www.iam-624.com/",
+    "time": "2026-11-22 10:39:01"
+  },
+  "chrome-admin-research-1": {
+    "file": "chrome-admin-research-1.png",
+    "kind": "chrome",
+    "label": "edit research: text typed in front of the title",
+    "url": "http://admin.iam-624.com/research",
+    "time": "2026-11-22 10:39:03"
+  },
+  "chrome-admin-research-2": {
+    "file": "chrome-admin-research-2.png",
+    "kind": "chrome",
+    "label": "after Save: 'บันทึกแล้ว'",
+    "url": "http://admin.iam-624.com/research?saved=1",
+    "time": "2026-11-22 10:39:05"
+  },
+  "chrome-research-edited": {
+    "file": "chrome-research-edited.png",
+    "kind": "chrome",
+    "label": "www.iam-624.com/research : the new title at once",
+    "url": "http://www.iam-624.com/research",
+    "time": "2026-11-22 10:39:07"
+  },
+  "term-persist": {
+    "file": "term-persist.png",
+    "kind": "terminal",
+    "label": "Persistence: delete every portal-624 and app-research Pod, the edit stays",
+    "cmds": [
+      "$ip = minikube -p exam624 ip; $h = \"--resolve\",\"www.iam-624.com:80:$ip\",\"--resolve\",\"admin.iam-624.com:80:$ip\",\"--resolve\",\"www.id-624.com:80:$ip\"",
+      "kubectl delete pod -n iam624 -l 'app in (portal-624,app-research)'",
+      "kubectl wait -n iam624 --for=condition=ready pod -l 'app in (portal-624,app-research)' --timeout=120s",
+      "kubectl get pods -n iam624 -l 'app in (portal-624,app-research)' -o wide",
+      "curl.exe -s @h http://www.iam-624.com/ | sls 'admin-edit-\\d+' | select -First 1 | % { 'portal:   ' + $_.Matches.Value }",
+      "curl.exe -s @h http://www.iam-624.com/research | sls 'admin-edit-\\d+' | % { 'research: ' + $_.Matches.Value }"
+    ],
+    "time": "2026-11-22 10:39:07"
+  },
+  "chrome-portal-restart": {
+    "file": "chrome-portal-restart.png",
+    "kind": "chrome",
+    "label": "www.iam-624.com : still edited after the Pods were recreated",
+    "url": "http://www.iam-624.com/",
+    "time": "2026-11-22 10:39:21"
+  }
+}
